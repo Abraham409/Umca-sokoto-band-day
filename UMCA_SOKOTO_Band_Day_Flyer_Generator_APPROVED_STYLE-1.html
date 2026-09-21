@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UMCA SOKOTO — Steward of Praise Band Day</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#071a3a;color:#f7f0df;font-family:Georgia,"Times New Roman",serif}
+.page{max-width:650px;margin:auto;padding:14px}.hero{text-align:center;padding:24px 8px 18px}
+.brand{font-size:27px;font-weight:900;letter-spacing:3px}.eyebrow{font-size:20px;font-weight:800;letter-spacing:2px;margin-top:8px}
+.intro{color:#eee5d5}.card{background:#f7f0df;color:#071a3a;border-radius:22px;padding:20px}
+label{display:block;font-weight:800;margin:13px 0 7px}input,select{width:100%;padding:14px;border:1px solid #c9c0ae;border-radius:12px;font-size:16px;background:#fff}
+small{display:block;margin-top:6px;color:#596273}button{width:100%;border:0;border-radius:12px;padding:16px;margin-top:18px;background:#071a3a;color:#f7f0df;font-weight:900;font-size:16px}
+.status{text-align:center;min-height:20px}.result{margin-top:22px}.result canvas{width:100%;display:block;border-radius:16px}.hidden{display:none}
+</style>
+</head>
+<body>
+<main class="page">
+<section class="hero">
+<div class="brand">UMCA SOKOTO</div>
+<div class="eyebrow">STEWARD OF PRAISE BAND DAY</div>
+<p class="intro">Create your personalized <strong>“I WILL BE THERE”</strong> flyer.</p>
+</section>
+<section class="card">
+<label>📸 Upload your picture</label>
+<input id="photo" type="file" accept="image/*"><small>Use a clear portrait photo.</small>
+<label>Your name</label><input id="name" type="text" placeholder="Enter your name" maxlength="50">
+<label>Your role</label>
+<select id="role"><option value="">Select your role</option><option>Saxophonist</option><option>Keyboardist</option><option>Bassist</option><option>Drummer</option><option>Vocalist</option><option>Guitarist</option></select>
+<button id="generate">GENERATE MY FLYER</button><p id="status" class="status"></p>
+</section>
+<section id="result" class="result hidden"><canvas id="flyer" width="1080" height="1350"></canvas><button id="download">DOWNLOAD FLYER</button></section>
+</main>
+<script>
+const photo=document.getElementById("photo"),nameBox=document.getElementById("name"),roleBox=document.getElementById("role"),generate=document.getElementById("generate"),download=document.getElementById("download"),canvas=document.getElementById("flyer"),ctx=canvas.getContext("2d"),result=document.getElementById("result"),status=document.getElementById("status");
+let img=null;
+photo.onchange=()=>{const f=photo.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{img=new Image();img.onload=()=>status.textContent="Picture ready.";img.src=e.target.result};r.readAsDataURL(f)};
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function cover(im,x,y,w,h){const q=Math.max(w/im.width,h/im.height),nw=im.width*q,nh=im.height*q;ctx.save();rr(x,y,w,h,28);ctx.clip();ctx.drawImage(im,x-(nw-w)/2,y-(nh-h)/2,nw,nh);ctx.restore()}
+generate.onclick=()=>{
+const name=nameBox.value.trim(),role=roleBox.value;
+if(!img||!name||!role){status.textContent="Please add your picture, name and role.";return}
+const W=1080,H=1350;ctx.clearRect(0,0,W,H);
+ctx.fillStyle="#071a3a";ctx.fillRect(0,0,W,H);
+ctx.fillStyle="#f7f0df";ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(W,0);ctx.lineTo(W,145);ctx.quadraticCurveTo(790,195,540,155);ctx.quadraticCurveTo(250,115,0,205);ctx.closePath();ctx.fill();
+ctx.textAlign="center";ctx.fillStyle="#071a3a";ctx.font='900 52px Georgia';ctx.fillText("UMCA SOKOTO",540,76);ctx.font='800 29px Georgia';ctx.fillText("STEWARD OF PRAISE BAND DAY",540,120);
+ctx.globalAlpha=.10;ctx.font='150px Georgia';ctx.fillText("♪",930,285);ctx.font='110px Georgia';ctx.fillText("♫",120,340);ctx.globalAlpha=1;
+
+const px=55,py=330,pw=555,ph=600;
+ctx.fillStyle="#f7f0df";rr(px+18,py+15,pw,ph,32);ctx.fill();
+ctx.fillStyle="#071a3a";rr(px,py,pw,ph,32);ctx.fill();
+cover(img,px+25,py+25,pw-50,ph-145);
+
+ctx.textAlign="center";ctx.fillStyle="#f7f0df";
+ctx.font='italic 800 52px "Brush Script MT","Segoe Script",cursive';ctx.fillText(name,px+pw/2,py+ph-72);
+ctx.font='800 27px Georgia';ctx.fillText(role.toUpperCase(),px+pw/2,py+ph-27);
+
+ctx.textAlign="left";ctx.fillStyle="#f7f0df";ctx.font='italic 900 76px "Brush Script MT","Segoe Script",cursive';ctx.fillText("I will be",650,440);
+ctx.font='italic 900 88px "Brush Script MT","Segoe Script",cursive';ctx.fillText("THERE!",650,525);
+ctx.fillRect(650,545,330,7);
+ctx.font='800 34px Georgia';ctx.fillText("27 SEPTEMBER 2026",650,615);
+ctx.font='700 31px Georgia';ctx.fillText("9:00 AM",650,670);
+ctx.font='700 31px Georgia';ctx.fillText("CHURCH AUDITORIUM",650,725);
+
+ctx.textAlign="center";ctx.fillStyle="#f7f0df";
+ctx.font='italic 600 29px "Brush Script MT","Segoe Script",cursive';ctx.fillText("Powered by UMCA Media Team",540,1115);
+ctx.font='italic 22px Georgia';ctx.fillText("One Sound • One Purpose • To His Glory",540,1160);
+
+result.classList.remove("hidden");status.textContent="Your flyer is ready.";result.scrollIntoView({behavior:"smooth"});
+};
+download.onclick=()=>{const a=document.createElement("a");a.download=`UMCA-Band-Day-${nameBox.value.trim().replace(/\s+/g,"-")||"flyer"}.png`;a.href=canvas.toDataURL("image/png");a.click()};
+</script>
+</body>
+</html>
